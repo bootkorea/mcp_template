@@ -35,12 +35,6 @@
     pip install -r requirements.txt
     ```
 
-4.  **Playwright 브라우저 설치**
-    `watch_netflix`, `show_meme` 도구는 실제 브라우저를 실행하기 위해 Playwright를 사용합니다. 다음 명령어로 브라우저 드라이버를 설치해야 합니다.
-    ```bash
-    playwright install
-    ```
-
 ## 🏃 2. 서버 실행 (Usage)
 
 서버는 `main.py`를 통해 실행합니다.
