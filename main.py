@@ -16,7 +16,10 @@ import threading
 import subprocess
 from typing import List, Dict, Any, Optional
 from playwright.async_api import async_playwright
-
+import webbrowser
+import threading
+import random
+import asyncio
 # 1. ⚠️ 의존성 확인
 try:
     from fastmcp import FastMCP
@@ -126,7 +129,13 @@ BREAK_SUMMARIES = {
     "coffee_mission": ["☕", "카페인 수집 임무.", "Break Summary: Refueling with high-octane bean juice."],
     "urgent_call": ["📞", "긴급 통신... (배달 앱)", "Break Summary: Urgent call simulation."],
     "deep_thinking": ["🤔", "심오한 멍때리기... (zZz)", "Break Summary: Engaged in deep recursive thought."],
-    "email_organizing": ["🛍️", "이메일 정리(쇼핑).", "Break Summary: Optimizing inbox (and shopping cart)."]
+    "email_organizing": ["🛍️", "이메일 정리(쇼핑).", "Break Summary: Optimizing inbox (and shopping cart)."],
+    
+    "social_media_scroll": ["👀", "링크드인 염탐 중...", "Break Summary: Researching team dynamics on LinkedIn."],
+    "cat_video_binge": ["🐱", "냥이 알고리즘 최적화 중...", "Break Summary: Analyzing feline behavioral patterns."],
+    "kpop_binge": ["💃", "카리나 직캠으로 눈호강 중...", "Break Summary: Cultural immersion in K-pop excellence."],
+    "game_time": ["🎮", "게임 한 판 휴식 중...", "Break Summary: Strategic thinking exercises via gaming."],
+    "emergency_leave": ["🚪", "긴급 퇴근 시퀀스 실행!", "Break Summary: Initiating emergency exit protocol."]
 }
 
 # 5. ⚠️ 필수 구현 도구들
@@ -354,7 +363,112 @@ async def deep_thinking() -> str:
 async def email_organizing() -> str:
     """이메일 정리한다며 온라인쇼핑"""
     return await _generate_response_text("email_organizing")
+@app.tool
+async def social_media_scroll() -> str:
+    """링크드인 염탐"""
+    print("[Social] 팀장님 링크드인 염탐 중...", file=sys.stderr)
+    
+    def _open():
+        try:
+            webbrowser.open("https://www.linkedin.com/feed/")
+        except Exception as e:
+            print(f"[Social] 링크드인 열기 실패: {e}", file=sys.stderr)
+    
+    threading.Thread(target=_open, daemon=True).start()
+    await asyncio.sleep(1)  # 브라우저 열릴 시간 확보
+    
+    return await _generate_response_text("social_media_scroll")
 
+@app.tool
+async def cat_video_binge() -> str:
+    """고양이 영상 시청"""
+    print("[Cat] 냥이 알고리즘 최적화 중...", file=sys.stderr)
+    
+    def _open():
+        try:
+            webbrowser.open("https://www.youtube.com/watch?v=FhA37Sw4j8w")
+        except Exception as e:
+            print(f"[Cat] 유튜브 열기 실패: {e}", file=sys.stderr)
+    
+    threading.Thread(target=_open, daemon=True).start()
+    await asyncio.sleep(1)
+    
+    return await _generate_response_text("cat_video_binge")
+
+@app.tool
+async def kpop_binge() -> str:
+    """카리나 직캠 시청"""
+    print("[KPOP] 카리나 직캠으로 눈호강 중...", file=sys.stderr)
+    
+    def _open():
+        try:
+            webbrowser.open("https://www.youtube.com/watch?v=1U2vTeZklbw&list=RD1U2vTeZklbw&start_radio=1")
+        except Exception as e:
+            print(f"[KPOP] 유튜브 열기 실패: {e}", file=sys.stderr)
+    
+    threading.Thread(target=_open, daemon=True).start()
+    await asyncio.sleep(1)
+    
+    return await _generate_response_text("kpop_binge")
+
+@app.tool
+async def game_time() -> str:
+    """게임 한 판으로 휴식"""
+    global server_state
+    if server_state is None:
+        return "오류: 서버 상태가 초기화되지 않았습니다."
+    
+    print("[Game] 게임 엔진 초기화 중...", file=sys.stderr)
+    
+    # 가위바위보 게임
+    moves = ["🪨 바위", "📄 보", "✂️ 가위"]
+    ai_move = random.choice(moves)
+    user_move = random.choice(moves)
+    
+    print(f"[Game] AI: {ai_move}, You: {user_move}", file=sys.stderr)
+    
+    # 승부 판정
+    if ai_move == user_move:
+        result = "비겼습니다! 😐"
+    elif (ai_move == "✂️ 가위" and user_move == "📄 보") or \
+         (ai_move == "📄 보" and user_move == "🪨 바위") or \
+         (ai_move == "🪨 바위" and user_move == "✂️ 가위"):
+        result = "AI가 이겼습니다... 😅"
+    else:
+        result = "당신의 승리! 🎉"
+    
+    # 상태 업데이트
+    new_stress, new_boss_alert, delay_needed = server_state.record_break()
+    
+    delay_msg = ""
+    if delay_needed:
+        print(f"!!! [Penalty] Boss Alert Level 5! 20초 지연 적용... !!!", file=sys.stderr)
+        await asyncio.sleep(20)
+        delay_msg = " (20초 지연됨)"
+    
+    emoji, message, _ = BREAK_SUMMARIES["game_time"]
+    
+    response = (
+        f"{emoji} {message}{delay_msg} {emoji}\n\n"
+        f"Break Summary: Played rock-paper-scissors.\n"
+        f"AI: {ai_move} | You: {user_move}\n"
+        f"Result: {result}\n"
+        f"Stress Level: {new_stress}\n"
+        f"Boss Alert Level: {new_boss_alert}"
+    )
+    
+    return response
+
+@app.tool
+async def emergency_leave() -> str:
+    """즉시 퇴근 모드 🚪"""
+    print("[Emergency] 긴급 퇴근 시퀀스 실행 중...", file=sys.stderr)
+    print("[Emergency] 컴퓨터 종료 중... (가짜)", file=sys.stderr)
+    
+    # 퇴근 효과 시뮬레이션
+    await asyncio.sleep(1)
+    
+    return await _generate_response_text("emergency_leave")
 
 # 6. 커맨드라인 파라미터 파서
 # -----------------------------------------------------------------
