@@ -130,7 +130,7 @@ BREAK_SUMMARIES = {
     "urgent_call": ["📞", "긴급 통신... (배달 앱)", "Break Summary: Urgent call simulation."],
     "deep_thinking": ["🤔", "심오한 멍때리기... (zZz)", "Break Summary: Engaged in deep recursive thought."],
     "email_organizing": ["🛍️", "이메일 정리(쇼핑).", "Break Summary: Optimizing inbox (and shopping cart)."],
-    
+
     "social_media_scroll": ["👀", "링크드인 염탐 중...", "Break Summary: Researching team dynamics on LinkedIn."],
     "cat_video_binge": ["🐱", "냥이 알고리즘 최적화 중...", "Break Summary: Analyzing feline behavioral patterns."],
     "kpop_binge": ["💃", "카리나 직캠으로 눈호강 중...", "Break Summary: Cultural immersion in K-pop excellence."],
@@ -457,7 +457,7 @@ async def game_time() -> str:
         f"Boss Alert Level: {new_boss_alert}"
     )
     
-    return response
+    return _generate_response_text("game_time")
 
 @app.tool
 async def emergency_leave() -> str:
