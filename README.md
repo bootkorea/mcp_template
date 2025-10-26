@@ -85,6 +85,11 @@ python main.py
 * `urgent_call`: 📞 긴급 통화 (배달 앱)
 * `deep_thinking`: 🤔 멍때리기
 * `email_organizing`: 🛍️ 이메일 정리 (온라인 쇼핑)
+* `social_media_scroll`: 👀 링크드인 염탐 (웹 브라우저 실행)
+* `cat_video_binge`: 🐱 고양이 영상 시청 (유튜브 실행)
+* `kpop_binge`: 💃 카리나 직캠 시청 (유튜브 실행)
+* `game_time`: 🎮 게임 한 판 (서버와 가위바위보)
+* `emergency_leave`: ! 🚀 긴급 퇴근 프로세스 !
 
 ## 🧠 5. 핵심 동작 원리
 
